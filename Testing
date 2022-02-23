@@ -1,0 +1,61 @@
+TEST EFFETTUATI
+
+FILM_UTENTE:
+    - Titolo            __OK__
+    - Genere            __OK__
+    - Lettera           __OK__
+    - Anno              __OK__
+    - Più votati        __OK__
+    - Random            __OK__
+
+SERIE_UTENTE:
+    - Titolo            __OK__
+    - Genere            __OK__
+    - Lettera           __OK__
+    - Anno              __OK__
+    - Più votati        __OK__
+    - Random            __OK__
+
+RICHIESTE_UTENTE:
+    - Film                      __OK__
+        -RISPOSTE:
+            -Accettata                      __OK__
+            -Non trovato                    __OK__
+            -Postato in precedenza          __OK__
+            -Mai uscito in italia           __OK__
+    - Film SUB-ITA              __OK__
+        -RISPOSTE:
+            -Accettata                      __OK__
+            -Non trovato                    __OK__
+            -Postato in precedenza          __OK__
+    - Serie                     __OK__
+        -RISPOSTE:
+            -Accettata                      __OK__
+            -Non trovato                    __OK__
+            -Postato in precedenza          __OK__
+            -Mai uscito in italia           __OK__
+            -Serie in corso                 __OK__
+
+FILM_ADMIN:
+    - Backup Film                           __OK__
+    - Aggiunta Film                         __OK__
+    - Elimina Film                          __OK__
+
+SERIE_ADMIN:
+    - Backup Serie                          __OK__
+    - Aggiunta Serie                        __OK__
+    - Elimina Serie                         __OK__
+
+ADMIN_STATISTICHE                           __OK__
+
+ADMIN_CAMBIA STATO RICHIESTE                __OK__
+
+ADMIN_INVIA RIEPILOGO GIORNATA              __OK__
+
+ADMIN_GESTIONE_UTENTI:
+    - Azzera warn                           __OK__
+    - Diminuisci warn                       __OK__
+    - Unban utente                          __OK__
+    - Ban utente                            __OK__
+
+
