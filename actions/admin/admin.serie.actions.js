@@ -530,83 +530,93 @@ exports.pannello_aggiungi_serie = async (ctx) => {
 
 // --> pannello_aggiungi_film || pannello_crea_locandina || pannello_locandina_inviata || locandina_TMDB || pannello_invio_files (caso errore)
 exports.pannello_risultati_ricerca_serie = async (ctx) => {
-    // se !ctx.session.title significa che si è arrivati qui da pannelli successivi
-    if (!ctx.session.title) {
-        ctx.session.title = ctx.update.message.text;
-    }
-    // pulisco oggetti sessione
-    ctx.session.serie = '';
-    ctx.session.tipoRicerca = '';
-    ctx.session.id_locandina = '';
-    ctx.session.tipoDocumento = '';
-    ctx.session.tipoFoto = '';
+    try {
+        // se !ctx.session.title significa che si è arrivati qui da pannelli successivi
+        if (!ctx.session.title) {
+            ctx.session.title = ctx.update.message.text;
+        }
+        // pulisco oggetti sessione
+        ctx.session.serie = '';
+        ctx.session.tipoRicerca = '';
+        ctx.session.id_locandina = '';
+        ctx.session.tipoDocumento = '';
+        ctx.session.tipoFoto = '';
 
-    Moviedb.searchSerieByTitle(ctx.session.title).then( async (series) => {
-        
-        let responseText = '';
-        let arrayButtons = [];
-        
-        if (series.length > 0) {
-            responseText = 'Clicca sul bottone corrispondente alla serie corretta:\n\n';
-            let buttons = [];
-            let contatore = 1;
-            // crea il testo del messaggio e i bottoni
-            series.forEach((currentSerie) => {
-                responseText += contatore + ' - ' + currentSerie.name;
-                responseText += currentSerie.first_air_date?  '  ('
-                        + currentSerie.first_air_date.substring(0, 4)  + ')' + '\n' : '\n';
-                buttons.push({
-                    text: contatore,
-                    callback_data: 'ADMIN_LOCANDINA_TMDB_SERIE: ' + currentSerie.id
-                })
-                contatore += 1
-            })
-
-            responseText += '\n\n<i>Se la serie non è presente, crea manualmente la locandina.</>'
+        Moviedb.searchSerieByTitle(ctx.session.title).then( async (series) => {
             
-            // divide l'array buttons in più array di grandezza pari al secondo argomento
-            arrayButtons = Array.from({ length: Math.ceil(buttons.length / 4) }, (v, i) =>
-                    buttons.slice(i * 4, i * 4 + 4));
-            arrayButtons.push([ Buttons.crea_locandina_serie ])
-            arrayButtons.push([ Buttons.indietro('PANNELLO_AGGIUNGI_SERIE') ])
-        } else {
-            responseText = 'La serie cercata non è presente, creare manualmente la locandina:';
-            arrayButtons = [
-                [ Buttons.crea_locandina_serie ],
-                [ Buttons.indietro('PANNELLO_AGGIUNGI_SERIE') ]
-            ]
-        }
+            let responseText = '';
+            let arrayButtons = [];
+            
+            if (series.length > 0) {
+                responseText = 'Clicca sul bottone corrispondente alla serie corretta:\n\n';
+                let buttons = [];
+                let contatore = 1;
+                // crea il testo del messaggio e i bottoni
+                series.forEach((currentSerie) => {
+                    responseText += contatore + ' - ' + currentSerie.name;
+                    responseText += currentSerie.first_air_date?  '  ('
+                            + currentSerie.first_air_date.substring(0, 4)  + ')' + '\n' : '\n';
+                    buttons.push({
+                        text: contatore,
+                        callback_data: 'ADMIN_LOCANDINA_TMDB_SERIE: ' + currentSerie.id
+                    })
+                    contatore += 1
+                })
 
-        await ctx.replyWithHTML( responseText, {
-            parse_mode: 'HTML',
-            reply_markup: { inline_keyboard: arrayButtons } 
-        });
-        // elimina messaggio precedente
-        if (ctx.update.message) {
-            const id_messaggio = ctx.update.message.message_id - 1;
-            try {
-                await ctx.deleteMessage(id_messaggio).catch((err) => {
-                    console.log("ERRORE DELETE MESSAGE ADMIN SERIE");
-                    console.error(err);
-                });
-            } catch (err) {
-                console.error(err);
+                responseText += '\n\n<i>Se la serie non è presente, crea manualmente la locandina.</>'
+                
+                // divide l'array buttons in più array di grandezza pari al secondo argomento
+                arrayButtons = Array.from({ length: Math.ceil(buttons.length / 4) }, (v, i) =>
+                        buttons.slice(i * 4, i * 4 + 4));
+                arrayButtons.push([ Buttons.crea_locandina_serie ])
+                arrayButtons.push([ Buttons.indietro('PANNELLO_AGGIUNGI_SERIE') ])
+            } else {
+                responseText = 'La serie cercata non è presente, creare manualmente la locandina:';
+                arrayButtons = [
+                    [ Buttons.crea_locandina_serie ],
+                    [ Buttons.indietro('PANNELLO_AGGIUNGI_SERIE') ]
+                ]
             }
-            try {
-                ctx.deleteMessage(ctx.update.message.message_id).catch((err) => {
-                    console.log("ERRORE DELETE MESSAGE ADMIN SERIE");
-                    console.error(err);
-                });
-            } catch (err) {
-                console.error(err);
-            }
-        } else if (ctx.update.callback_query) {
-            await ctx.deleteMessage(ctx.update.callback_query.message.id).catch((err) => {
-                console.log("ERRORE DELETE MESSAGE ADMIN SERIE");
-                console.error(err);
+
+            await ctx.replyWithHTML( responseText, {
+                parse_mode: 'HTML',
+                reply_markup: { inline_keyboard: arrayButtons } 
             });
-        }
-    });
+            // elimina messaggio precedente
+            if (ctx.update.message) {
+                const id_messaggio = ctx.update.message.message_id - 1;
+                try {
+                    await ctx.deleteMessage(id_messaggio).catch((err) => {
+                        console.log("ERRORE DELETE MESSAGE ADMIN SERIE");
+                        console.error(err);
+                    });
+                } catch (err) {
+                    console.error(err);
+                }
+                try {
+                    ctx.deleteMessage(ctx.update.message.message_id).catch((err) => {
+                        console.log("ERRORE DELETE MESSAGE ADMIN SERIE");
+                        console.error(err);
+                    });
+                } catch (err) {
+                    console.error(err);
+                }
+            } else if (ctx.update.callback_query) {
+                await ctx.deleteMessage(ctx.update.callback_query.message.id).catch((err) => {
+                    console.log("ERRORE DELETE MESSAGE ADMIN SERIE");
+                    console.error(err);
+                });
+            }
+        });
+    } catch (err) {
+        console.log("ERRORE ADMIN RICERCA SERIE");
+        console.error(err);
+        ctx.reply( '‼️ *ERRORE* ‼️\n\nCi scusiamo, si è verificato un errore. Riprova.',
+            { parse_mode: 'Markdown', reply_markup: { inline_keyboard : [[ Buttons.pannello_HOME ]]}}).catch((err) => {
+            console.log("ERRORE REPLY ERRORE ADMIN ROUTES");
+            console.error(err);
+        });
+    }
 }
 
 // richiede l'invio della locandina
