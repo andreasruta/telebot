@@ -271,7 +271,7 @@ module.exports = {
             [ Buttons.pannello_ricerca_serie_lettera, Buttons.pannello_ricerca_serie_anno ],
             [ Buttons.pannello_risultati_serie_più_votate, Buttons.pannello_risultati_serie_random ],
             [{ text: '🏗 Serie in corso 🏗', url: 'https://t.me/Serietv_incorso_Ita' }],
-            [{ text: '☁️ Serie SKY original ☁️', url: 'https://t.me/Il_Centopiedi' }],
+            [{ text: '☁️ Serie SKY original ☁️', url: 'https://t.me/ilpiuveloce_ita' }],
             [ Buttons.indietro('PANNELLO_BENVENUTO') ]
         ]
     },
