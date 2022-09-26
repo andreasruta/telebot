@@ -13,10 +13,6 @@ db.user = require('./user.model')(mongoose);
 db.admin = require('./admin.model')(mongoose);
 db.Bot = require('./bot.model')(mongoose);
 
-//  configurazione db con heroku
-//db.url = "mongodb+srv://pagos:PLVLMH3J@cluster0.huiyd.mongodb.net/movies_db?retryWrites=true&w=majority"
-
-
 db.url = "mongodb+srv://andrearuta:123Stellone@cluster0.fgpjs.mongodb.net/movies_db?retryWrites=true&w=majority"
 
 
